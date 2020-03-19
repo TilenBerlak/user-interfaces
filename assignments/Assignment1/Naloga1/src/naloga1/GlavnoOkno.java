@@ -93,6 +93,7 @@ public class GlavnoOkno extends javax.swing.JFrame {
         jRadioButton3.setText("Odstrani izbranega");
 
         buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setSelected(true);
         jRadioButton1.setText("Dodaj");
         jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,11 +110,17 @@ public class GlavnoOkno extends javax.swing.JFrame {
 
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, 20, 1));
         jSpinner1.setMaximumSize(new java.awt.Dimension(20, 20));
+        jSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                updateMessage(evt);
+            }
+        });
 
         jCheckBox1.setText("Prepovej dvojnike");
 
         jLabel2.setText("Vrstica za sporočila");
 
+        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         jButton2.setText("Izbire1 T");
@@ -241,35 +248,35 @@ public class GlavnoOkno extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 746, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(72, 72, 72))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jRadioButton1)
-                                .addGap(13, 13, 13)
-                                .addComponent(jRadioButton2)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox1)
-                                    .addComponent(jRadioButton3))
-                                .addGap(89, 89, 89)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(72, 72, 72))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(jRadioButton1)
+                            .addGap(13, 13, 13)
+                            .addComponent(jRadioButton2)
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jCheckBox1)
+                                .addComponent(jRadioButton3))
+                            .addGap(89, 89, 89)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(9, 9, 9)
-                        .addComponent(jButton1)))
+                        .addComponent(jButton1)
+                        .addGap(278, 278, 278)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,18 +286,18 @@ public class GlavnoOkno extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton2)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jLabel2))
+                    .addComponent(jRadioButton3))
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jCheckBox1))
-                .addContainerGap(19, Short.MAX_VALUE))
+                    .addComponent(jCheckBox1)
+                    .addComponent(jLabel2))
+                .addGap(29, 29, 29))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -347,6 +354,7 @@ public class GlavnoOkno extends javax.swing.JFrame {
 
         jMenuItem5.setMnemonic('I');
         jMenuItem5.setText("Izbire1 I");
+        jMenuItem5.setDisplayedMnemonicIndex(8);
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Izbire1I(evt);
@@ -365,6 +373,7 @@ public class GlavnoOkno extends javax.swing.JFrame {
 
         jMenuItem7.setMnemonic('E');
         jMenuItem7.setText("Izbire1 E");
+        jMenuItem7.setDisplayedMnemonicIndex(8);
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Izbire1E(evt);
@@ -386,7 +395,9 @@ public class GlavnoOkno extends javax.swing.JFrame {
         jMenu3.setMnemonic('2');
         jMenu3.setText("Izbire2");
 
+        jMenuItem9.setMnemonic('B');
         jMenuItem9.setText("Izbire2 B");
+        jMenuItem9.setDisplayedMnemonicIndex(8);
         jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Izbire2B(evt);
@@ -394,7 +405,9 @@ public class GlavnoOkno extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem9);
 
+        jMenuItem10.setMnemonic('E');
         jMenuItem10.setText("Izbire2 E");
+        jMenuItem10.setDisplayedMnemonicIndex(8);
         jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Izbire1E(evt);
@@ -402,7 +415,9 @@ public class GlavnoOkno extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem10);
 
+        jMenuItem11.setMnemonic('R');
         jMenuItem11.setText("Izbire2 R");
+        jMenuItem11.setDisplayedMnemonicIndex(8);
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Izbire2R(evt);
@@ -410,6 +425,7 @@ public class GlavnoOkno extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem11);
 
+        jMenuItem12.setMnemonic('L');
         jMenuItem12.setText("Izbire2 L");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -418,6 +434,7 @@ public class GlavnoOkno extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem12);
 
+        jMenuItem14.setMnemonic('A');
         jMenuItem14.setText("Izbire2 A");
         jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -426,6 +443,7 @@ public class GlavnoOkno extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem14);
 
+        jMenuItem15.setMnemonic('K');
         jMenuItem15.setText("Izbire2 K");
         jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -460,9 +478,8 @@ public class GlavnoOkno extends javax.swing.JFrame {
     }//GEN-LAST:event_IzhodCB
 
     private void PobrisiCB(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PobrisiCB
-        
-        
-        
+        jTextField1.setText("");
+        jLabel1.setText("Status ");
     }//GEN-LAST:event_PobrisiCB
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -476,8 +493,10 @@ public class GlavnoOkno extends javax.swing.JFrame {
     private void izvedi(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_izvedi
         
         if (jRadioButton1.isSelected()) {
-            if(jTextField1.getText() != "") {
-                
+                  
+            if(!jTextField1.getText().equals("")) {
+                jLabel2.setText("Dodajam");
+                            
                 boolean duplicate = false;
                 int size = jComboBox1.getItemCount();
                 for (int i = 0; i < size; i++) {
@@ -498,12 +517,22 @@ public class GlavnoOkno extends javax.swing.JFrame {
             }                 
         }
         
-        if (jRadioButton2.isSelected()) {
-            jComboBox1.removeItemAt(0);
+        if (jRadioButton2.isSelected()) {          
+            
+            if(jComboBox1.getItemAt(0) != null) {
+                jLabel2.setText("Odstranjujem prvega");
+                jComboBox1.removeItemAt(0);
+            }
+            
         }
         
         if (jRadioButton3.isSelected()) {
-            jComboBox1.removeItemAt(jComboBox1.getSelectedIndex());          
+            
+            if(jComboBox1.getSelectedItem() != null) {    
+                jLabel2.setText("Odstranjujem izbranega");
+                jComboBox1.removeItemAt(jComboBox1.getSelectedIndex());
+            }
+                 
         }
         
     }//GEN-LAST:event_izvedi
@@ -552,6 +581,16 @@ public class GlavnoOkno extends javax.swing.JFrame {
         String text = jLabel1.getText();
         jLabel1.setText(text + "K");
     }//GEN-LAST:event_Izbire2K
+
+    private void updateMessage(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_updateMessage
+        int index = (int) jSpinner1.getValue();
+        
+        if(jComboBox1.getItemAt(index) != null) {
+            jLabel2.setText(jComboBox1.getItemAt(index));
+        } else {
+            jLabel2.setText("Ni elementa");
+        }
+    }//GEN-LAST:event_updateMessage
 
          /**
      * @param args the command line arguments
