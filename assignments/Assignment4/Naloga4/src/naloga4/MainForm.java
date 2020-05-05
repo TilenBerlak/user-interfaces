@@ -5,19 +5,152 @@
  */
 package naloga4;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author tilen
  */
 public class MainForm extends javax.swing.JFrame {
 
+    private String creditCardNumber = "";
+    private int majhnaCena = 70;
+    private int srednjaCena = 100;
+    private int visokaCena = 140;
+    
     /**
      * Creates new form MainForm
      */
     public MainForm() {
         initComponents();
+        fillDays();
+        fillMonths();
+        fillHours();
+        fillCars();
+        updateCena(100);
     }
-
+    
+    /**
+     * Fills both comboBoxes with days from 1 to 31.
+     */
+    private void fillDays() {
+        
+        for(int i = 1; i <= 31; i++) {
+            jComboBoxIzposojaDan.addItem(Integer.toString(i));
+            jComboBoxOddajaDan.addItem(Integer.toString(i));
+        }
+    }
+    
+    /**
+     * Fills both comboBoxes with months from January to February.
+     */
+    private void fillMonths() {
+        String[] months = {"januar", "februar", "marec", "april", "maj", "junij",
+            "julij", "august", "september", "oktober", "november", "december"};
+        
+        for(String e : months) {
+            jComboBoxIzposojaMesec.addItem(e);
+            jComboBoxOddajaMesec.addItem(e);
+        }
+    }
+    
+    /**
+     * Fills both comboBoxes with hours from 00:00 to 23:00.
+     */
+    private void fillHours() {
+        
+        for(int i = 0; i < 24; i++) {
+            String hour;
+            
+            if (i < 10) {
+                hour = "0" + i + ".00";
+            } else {
+                hour = i + ".00";
+            }
+            
+            jComboBoxIzposojaUra.addItem(hour);
+            jComboBoxOddajaUra.addItem(hour);
+        }
+        
+    }
+     
+    private void fillCars() {
+        
+        jComboBoxIzbiraAvtomobila.removeAllItems();
+        
+        String[] smallCars = {"Hyundai i20", "Škoda Fabia", "Toyota Yairs", "Renault Clio"};
+        String[] mediumCars = {"MB C180", "Audi A5", "Toyota Avensis", "Honda Accord", "Škoda Octavia"};
+        String[] largeCars = {"BMW Serija 7", "Audi Q7", "Chevrolet Blazer", "Dodge Durango", "Škoda Superb"};
+        
+        if (jRadioButtonVelikostMajhen.isSelected()) {
+            
+            for(int i = 0; i < smallCars.length; i++) {
+                jComboBoxIzbiraAvtomobila.addItem(smallCars[i]);
+            }
+            
+        } else if (jRadioButtonVelikostSrednji.isSelected()) {
+            
+            for(int i = 0; i < mediumCars.length; i++) {           
+                jComboBoxIzbiraAvtomobila.addItem(mediumCars[i]);         
+            }   
+            
+        } else {
+            
+            for(int i = 0; i < largeCars.length; i++) {
+                jComboBoxIzbiraAvtomobila.addItem(largeCars[i]);
+            } 
+            
+        }      
+    }
+    
+    private int calculateDnevnaCena(int cena) {
+        
+        int dnevnaCena = cena;
+        
+        if (jRadioButtonDodatnoDa.isSelected())        
+            dnevnaCena += 2;
+               
+        return dnevnaCena;
+    }
+    
+    private int calculateSkupnaCena(int cena) {
+        
+        int danIzposoje = jComboBoxIzposojaDan.getSelectedIndex();
+        int danOddaje = jComboBoxOddajaDan.getSelectedIndex();
+        
+        int mesecIzposoje = jComboBoxIzposojaMesec.getSelectedIndex();
+        int mesecOddaje = jComboBoxOddajaMesec.getSelectedIndex();
+        
+        int steviloDni = danOddaje - danIzposoje;
+        int steviloMesecev = mesecOddaje - mesecIzposoje;
+        
+        if (steviloDni < 0) {
+            steviloDni = Math.abs(steviloDni);
+        }
+        
+        int vsiDnevi;
+        if (steviloMesecev < 0) {
+            steviloMesecev = Math.abs(steviloMesecev);
+            
+            int n = steviloMesecev - 1;
+            vsiDnevi = (30 * n) + steviloDni; 
+            
+        }  else {
+            vsiDnevi = steviloDni;
+        }
+        
+        int skupnaCena = vsiDnevi * cena;
+        return skupnaCena;
+    }
+    
+    private void updateCena(int cena) {
+        
+        int dnevnaCena = calculateDnevnaCena(cena);
+        int skupnaCena = calculateSkupnaCena(dnevnaCena); 
+        jLabelDnevnaNajemnina.setText(Integer.toString(dnevnaCena));
+        jLabelSkupnaNajemnina.setText(Integer.toString(skupnaCena)); 
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,6 +160,11 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroupVelikostAvtomobila = new javax.swing.ButtonGroup();
+        buttonGroupIzbiraMenjalnika = new javax.swing.ButtonGroup();
+        buttonGroupVrstaMotorja = new javax.swing.ButtonGroup();
+        buttonGroupDodatnoZavarovanje = new javax.swing.ButtonGroup();
+        buttonGroupMoznostPlacila = new javax.swing.ButtonGroup();
         jPanelMain = new javax.swing.JPanel();
         jLayeredPaneAvtomobil = new javax.swing.JLayeredPane();
         jLabelDatumIzposoje = new javax.swing.JLabel();
@@ -43,36 +181,36 @@ public class MainForm extends javax.swing.JFrame {
         jComboBoxIzbiraAvtomobila = new javax.swing.JComboBox<>();
         jLabelIzbiraMenjalnika = new javax.swing.JLabel();
         jLabelVrstaMotorja = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox<>();
-        jRadioButtonMenjalnikAvtomatski = new javax.swing.JRadioButton();
+        jComboBoxIzposojaDan = new javax.swing.JComboBox<>();
+        jRadioButtonMenjalnikSamodejni = new javax.swing.JRadioButton();
         jRadioButtonMenjalnikRočni = new javax.swing.JRadioButton();
         jRadioButtonMotorDizelski = new javax.swing.JRadioButton();
         jRadioButtonMotorBencinski = new javax.swing.JRadioButton();
-        jComboBox5 = new javax.swing.JComboBox<>();
-        jComboBox6 = new javax.swing.JComboBox<>();
-        jComboBox7 = new javax.swing.JComboBox<>();
-        jComboBox8 = new javax.swing.JComboBox<>();
-        jComboBox9 = new javax.swing.JComboBox<>();
+        jComboBoxIzposojaMesec = new javax.swing.JComboBox<>();
+        jComboBoxIzposojaUra = new javax.swing.JComboBox<>();
+        jComboBoxOddajaDan = new javax.swing.JComboBox<>();
+        jComboBoxOddajaMesec = new javax.swing.JComboBox<>();
+        jComboBoxOddajaUra = new javax.swing.JComboBox<>();
         jLayeredPaneOseba = new javax.swing.JLayeredPane();
         jLabelImeOsebe = new javax.swing.JLabel();
         jLabelPriimekOsebe = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        jTextFieldIme = new javax.swing.JTextField();
+        jTextFieldPriimek = new javax.swing.JTextField();
         jLabelKrajOsebe = new javax.swing.JLabel();
         jLabelUlicaOsebe = new javax.swing.JLabel();
         jLabelTelefonOsebe = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        jTextFieldTelefon = new javax.swing.JTextField();
         jLabelStarostOsebe = new javax.swing.JLabel();
         jLabelDodatnoZav = new javax.swing.JLabel();
         jRadioButtonDodatnoDa = new javax.swing.JRadioButton();
         jRadioButtonDodatnoNe = new javax.swing.JRadioButton();
         jSpinnerStarost = new javax.swing.JSpinner();
-        jTextField9 = new javax.swing.JTextField();
-        jTextField11 = new javax.swing.JTextField();
+        jTextFieldKraj = new javax.swing.JTextField();
+        jTextFieldUlica = new javax.swing.JTextField();
         jLabelPostnaSt = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jTextFieldPostnaSt = new javax.swing.JTextField();
         jLabelEposta = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        jTextFieldEposta = new javax.swing.JTextField();
         jLabelIzkusnje = new javax.swing.JLabel();
         jSpinnerIzkusnje = new javax.swing.JSpinner();
         jLayeredPanePlačilo = new javax.swing.JLayeredPane();
@@ -90,6 +228,7 @@ public class MainForm extends javax.swing.JFrame {
         jLabelDnevnaNajemnina = new javax.swing.JLabel();
         jLabelSkupnaNajemnina = new javax.swing.JLabel();
         jButtonPonastavi = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jLabelStatus = new javax.swing.JLabel();
         jMenuBarMain = new javax.swing.JMenuBar();
         jMenuDatoteka = new javax.swing.JMenu();
@@ -103,7 +242,10 @@ public class MainForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanelMain.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+
         jLayeredPaneAvtomobil.setBorder(javax.swing.BorderFactory.createTitledBorder("Podatki o avtomobilu"));
+        jLayeredPaneAvtomobil.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         jLabelDatumIzposoje.setText("Datum izposoje:");
 
@@ -119,34 +261,93 @@ public class MainForm extends javax.swing.JFrame {
 
         jComboBoxMestoOddaje.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ljubljana", "Maribor", "Celje", "Kranj", "Velenje", "Koper", "Novo Mesto", "Murska Sobota", "Jesenice", "Portorož", "letališče Brnik", "letačišče Maribor" }));
 
+        buttonGroupVelikostAvtomobila.add(jRadioButtonVelikostMajhen);
         jRadioButtonVelikostMajhen.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonVelikostMajhen.setText("Majhen");
+        jRadioButtonVelikostMajhen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                smallCarSizeSelected(evt);
+            }
+        });
 
+        buttonGroupVelikostAvtomobila.add(jRadioButtonVelikostSrednji);
         jRadioButtonVelikostSrednji.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButtonVelikostSrednji.setSelected(true);
         jRadioButtonVelikostSrednji.setText("Srednji");
+        jRadioButtonVelikostSrednji.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mediumCarSizeSelected(evt);
+            }
+        });
 
+        buttonGroupVelikostAvtomobila.add(jRadioButtonVelikostVelik);
         jRadioButtonVelikostVelik.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonVelikostVelik.setText("Velik");
+        jRadioButtonVelikostVelik.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                largeCarSizeSelected(evt);
+            }
+        });
 
         jLabelIzbiraAvtomobila.setText("Izbira avtomobila:");
-
-        jComboBoxIzbiraAvtomobila.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabelIzbiraMenjalnika.setText("Izbira menjalnika:");
 
         jLabelVrstaMotorja.setText("Vrsta motorja:");
 
-        jRadioButtonMenjalnikAvtomatski.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jRadioButtonMenjalnikAvtomatski.setText("Avtomatski");
+        jComboBoxIzposojaDan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateChanged(evt);
+            }
+        });
 
+        buttonGroupIzbiraMenjalnika.add(jRadioButtonMenjalnikSamodejni);
+        jRadioButtonMenjalnikSamodejni.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButtonMenjalnikSamodejni.setText("Samodejni");
+
+        buttonGroupIzbiraMenjalnika.add(jRadioButtonMenjalnikRočni);
         jRadioButtonMenjalnikRočni.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButtonMenjalnikRočni.setSelected(true);
         jRadioButtonMenjalnikRočni.setText("Ročni");
 
+        buttonGroupVrstaMotorja.add(jRadioButtonMotorDizelski);
         jRadioButtonMotorDizelski.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonMotorDizelski.setText("Dizelski");
 
+        buttonGroupVrstaMotorja.add(jRadioButtonMotorBencinski);
         jRadioButtonMotorBencinski.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButtonMotorBencinski.setSelected(true);
         jRadioButtonMotorBencinski.setText("Bencinski");
+
+        jComboBoxIzposojaMesec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateChanged(evt);
+            }
+        });
+
+        jComboBoxIzposojaUra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateChanged(evt);
+            }
+        });
+
+        jComboBoxOddajaDan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateChanged(evt);
+            }
+        });
+
+        jComboBoxOddajaMesec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateChanged(evt);
+            }
+        });
+
+        jComboBoxOddajaUra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dateChanged(evt);
+            }
+        });
 
         jLayeredPaneAvtomobil.setLayer(jLabelDatumIzposoje, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneAvtomobil.setLayer(jLabelDatumOddaje, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -162,16 +363,16 @@ public class MainForm extends javax.swing.JFrame {
         jLayeredPaneAvtomobil.setLayer(jComboBoxIzbiraAvtomobila, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneAvtomobil.setLayer(jLabelIzbiraMenjalnika, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneAvtomobil.setLayer(jLabelVrstaMotorja, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneAvtomobil.setLayer(jComboBox4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneAvtomobil.setLayer(jRadioButtonMenjalnikAvtomatski, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneAvtomobil.setLayer(jComboBoxIzposojaDan, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneAvtomobil.setLayer(jRadioButtonMenjalnikSamodejni, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneAvtomobil.setLayer(jRadioButtonMenjalnikRočni, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneAvtomobil.setLayer(jRadioButtonMotorDizelski, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneAvtomobil.setLayer(jRadioButtonMotorBencinski, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneAvtomobil.setLayer(jComboBox5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneAvtomobil.setLayer(jComboBox6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneAvtomobil.setLayer(jComboBox7, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneAvtomobil.setLayer(jComboBox8, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneAvtomobil.setLayer(jComboBox9, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneAvtomobil.setLayer(jComboBoxIzposojaMesec, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneAvtomobil.setLayer(jComboBoxIzposojaUra, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneAvtomobil.setLayer(jComboBoxOddajaDan, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneAvtomobil.setLayer(jComboBoxOddajaMesec, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneAvtomobil.setLayer(jComboBoxOddajaUra, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPaneAvtomobilLayout = new javax.swing.GroupLayout(jLayeredPaneAvtomobil);
         jLayeredPaneAvtomobil.setLayout(jLayeredPaneAvtomobilLayout);
@@ -184,50 +385,53 @@ public class MainForm extends javax.swing.JFrame {
                     .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
                         .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelPrevzemnoMesto)
-                            .addComponent(jLabelIzbiraMenjalnika)
-                            .addComponent(jLabelVrstaMotorja)
                             .addComponent(jLabelIzbiraAvtomobila)
                             .addComponent(jLabelVelikostAvtomobila))
                         .addGap(18, 18, 18)
-                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBoxIzbiraAvtomobila, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
+                                .addComponent(jComboBoxIzposojaDan, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxIzposojaMesec, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxIzposojaUra, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jComboBoxPrevzemnoMesto, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
                                 .addComponent(jRadioButtonVelikostMajhen)
                                 .addGap(18, 18, 18)
                                 .addComponent(jRadioButtonVelikostSrednji)
                                 .addGap(18, 18, 18)
                                 .addComponent(jRadioButtonVelikostVelik))
+                            .addComponent(jComboBoxIzbiraAvtomobila, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 118, Short.MAX_VALUE)
+                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelIzbiraMenjalnika)
+                            .addComponent(jLabelVrstaMotorja))
+                        .addGap(19, 19, 19)
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonMenjalnikSamodejni)
+                            .addComponent(jRadioButtonMotorDizelski))
+                        .addGap(18, 18, 18)
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonMenjalnikRočni)
+                            .addComponent(jRadioButtonMotorBencinski))
+                        .addGap(60, 60, 60))
+                    .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelDatumOddaje)
+                            .addComponent(jLabelMestoOddaje))
+                        .addGap(40, 40, 40)
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
-                                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
-                                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jRadioButtonMenjalnikAvtomatski)
-                                            .addComponent(jRadioButtonMotorDizelski))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jRadioButtonMenjalnikRočni)
-                                            .addComponent(jRadioButtonMotorBencinski)))
-                                    .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
-                                        .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jComboBoxPrevzemnoMesto, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(41, 41, 41)
-                                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelMestoOddaje)
-                                    .addComponent(jLabelDatumOddaje))
-                                .addGap(24, 24, 24)
-                                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBoxMestoOddaje, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
-                                        .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jComboBox9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                .addContainerGap(53, Short.MAX_VALUE))
+                                .addComponent(jComboBoxOddajaDan, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxOddajaMesec, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxOddajaUra, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jComboBoxMestoOddaje, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
         jLayeredPaneAvtomobilLayout.setVerticalGroup(
             jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,43 +439,47 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelDatumIzposoje)
-                    .addComponent(jLabelDatumOddaje)
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
-                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelPrevzemnoMesto)
-                    .addComponent(jComboBoxPrevzemnoMesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelMestoOddaje)
-                    .addComponent(jComboBoxMestoOddaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelVelikostAvtomobila)
-                    .addComponent(jRadioButtonVelikostMajhen)
-                    .addComponent(jRadioButtonVelikostSrednji)
-                    .addComponent(jRadioButtonVelikostVelik))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelIzbiraAvtomobila)
-                    .addComponent(jComboBoxIzbiraAvtomobila, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23)
-                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelIzbiraMenjalnika)
-                    .addComponent(jRadioButtonMenjalnikAvtomatski)
-                    .addComponent(jRadioButtonMenjalnikRočni))
-                .addGap(18, 18, 18)
-                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelVrstaMotorja)
-                    .addComponent(jRadioButtonMotorDizelski)
-                    .addComponent(jRadioButtonMotorBencinski))
-                .addContainerGap())
+                    .addComponent(jComboBoxIzposojaDan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxIzposojaMesec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxIzposojaUra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxOddajaDan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxOddajaMesec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxOddajaUra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelDatumOddaje))
+                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelPrevzemnoMesto)
+                            .addComponent(jComboBoxPrevzemnoMesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelMestoOddaje)
+                            .addComponent(jComboBoxMestoOddaje, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29)
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelVelikostAvtomobila)
+                            .addComponent(jRadioButtonVelikostMajhen)
+                            .addComponent(jRadioButtonVelikostSrednji)
+                            .addComponent(jRadioButtonVelikostVelik)))
+                    .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
+                        .addGap(68, 68, 68)
+                        .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jLayeredPaneAvtomobilLayout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabelVrstaMotorja)
+                                    .addComponent(jRadioButtonMotorDizelski)
+                                    .addComponent(jRadioButtonMotorBencinski)
+                                    .addComponent(jLabelIzbiraAvtomobila)
+                                    .addComponent(jComboBoxIzbiraAvtomobila, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jLayeredPaneAvtomobilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabelIzbiraMenjalnika)
+                                .addComponent(jRadioButtonMenjalnikSamodejni)
+                                .addComponent(jRadioButtonMenjalnikRočni)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLayeredPaneOseba.setBorder(javax.swing.BorderFactory.createTitledBorder("Podatki o osebi"));
+        jLayeredPaneOseba.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         jLabelImeOsebe.setText("Ime:");
 
@@ -287,39 +495,56 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabelDodatnoZav.setText("Dodatno zavarovanje:");
 
+        buttonGroupDodatnoZavarovanje.add(jRadioButtonDodatnoDa);
         jRadioButtonDodatnoDa.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButtonDodatnoDa.setSelected(true);
         jRadioButtonDodatnoDa.setText("Da");
+        jRadioButtonDodatnoDa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dodatnoZavarovanjeSelected(evt);
+            }
+        });
 
+        buttonGroupDodatnoZavarovanje.add(jRadioButtonDodatnoNe);
         jRadioButtonDodatnoNe.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonDodatnoNe.setText("Ne");
+        jRadioButtonDodatnoNe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dodatnoZavarovanjeDiselected(evt);
+            }
+        });
+
+        jSpinnerStarost.setModel(new javax.swing.SpinnerNumberModel(21, 18, 130, 1));
 
         jLabelPostnaSt.setText("Poštna št.:");
 
         jLabelEposta.setText("E-pošta:");
 
-        jTextField4.setToolTipText("");
+        jTextFieldEposta.setToolTipText("");
 
         jLabelIzkusnje.setText("Izkušnje(leta):");
 
+        jSpinnerIzkusnje.setModel(new javax.swing.SpinnerNumberModel(0, 0, 110, 1));
+
         jLayeredPaneOseba.setLayer(jLabelImeOsebe, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelPriimekOsebe, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneOseba.setLayer(jTextField1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneOseba.setLayer(jTextField2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneOseba.setLayer(jTextFieldIme, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneOseba.setLayer(jTextFieldPriimek, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelKrajOsebe, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelUlicaOsebe, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelTelefonOsebe, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneOseba.setLayer(jTextField7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneOseba.setLayer(jTextFieldTelefon, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelStarostOsebe, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelDodatnoZav, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jRadioButtonDodatnoDa, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jRadioButtonDodatnoNe, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jSpinnerStarost, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneOseba.setLayer(jTextField9, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneOseba.setLayer(jTextField11, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneOseba.setLayer(jTextFieldKraj, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneOseba.setLayer(jTextFieldUlica, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelPostnaSt, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneOseba.setLayer(jTextField3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneOseba.setLayer(jTextFieldPostnaSt, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelEposta, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPaneOseba.setLayer(jTextField4, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPaneOseba.setLayer(jTextFieldEposta, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jLabelIzkusnje, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneOseba.setLayer(jSpinnerIzkusnje, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -335,8 +560,7 @@ public class MainForm extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jRadioButtonDodatnoDa)
                         .addGap(18, 18, 18)
-                        .addComponent(jRadioButtonDodatnoNe)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jRadioButtonDodatnoNe))
                     .addGroup(jLayeredPaneOsebaLayout.createSequentialGroup()
                         .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelImeOsebe)
@@ -344,9 +568,9 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(jLabelTelefonOsebe))
                         .addGap(21, 21, 21)
                         .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                            .addComponent(jTextFieldIme)
+                            .addComponent(jTextFieldPriimek)
+                            .addComponent(jTextFieldTelefon, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
                         .addGap(31, 31, 31)
                         .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelStarostOsebe)
@@ -354,20 +578,20 @@ public class MainForm extends javax.swing.JFrame {
                             .addComponent(jLabelKrajOsebe))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField9)
+                            .addComponent(jTextFieldKraj)
                             .addComponent(jSpinnerStarost, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                            .addComponent(jTextField11))
+                            .addComponent(jTextFieldUlica))
                         .addGap(49, 49, 49)
                         .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelPostnaSt)
                             .addComponent(jLabelEposta)
                             .addComponent(jLabelIzkusnje))
                         .addGap(4, 4, 4)
-                        .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3)
-                            .addComponent(jTextField4)
-                            .addComponent(jSpinnerIzkusnje))))
-                .addContainerGap())
+                        .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextFieldEposta, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldPostnaSt, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSpinnerIzkusnje, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPaneOsebaLayout.setVerticalGroup(
             jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,23 +599,23 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelImeOsebe)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldIme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelKrajOsebe)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldKraj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelPostnaSt)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldPostnaSt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelPriimekOsebe)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldPriimek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelUlicaOsebe)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldUlica, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelEposta)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldEposta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jLayeredPaneOsebaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelTelefonOsebe)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldTelefon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelStarostOsebe)
                     .addComponent(jSpinnerStarost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelIzkusnje)
@@ -405,20 +629,27 @@ public class MainForm extends javax.swing.JFrame {
         );
 
         jLayeredPanePlačilo.setBorder(javax.swing.BorderFactory.createTitledBorder("Plačilo"));
+        jLayeredPanePlačilo.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
         jLabelMoznostPlacila.setText("Možnost plačila:");
 
+        buttonGroupMoznostPlacila.add(jRadioButtonGotovina);
         jRadioButtonGotovina.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonGotovina.setText("Gotovina");
 
+        buttonGroupMoznostPlacila.add(jRadioButtonKartica);
         jRadioButtonKartica.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jRadioButtonKartica.setSelected(true);
         jRadioButtonKartica.setText("Kartica");
 
         jButtonIzvediPlacilo.setText("Izvedi plačilo");
+        jButtonIzvediPlacilo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                izvediPlacilo(evt);
+            }
+        });
 
         jLabelStKartice.setText("Št. kreditne kartice:");
-
-        jTextFieldStKartice.setText("xxxx-xxxx-xxxx-xxxx");
 
         jLabelCCV.setText("CCV:");
 
@@ -429,10 +660,8 @@ public class MainForm extends javax.swing.JFrame {
         jLabelSkupniZnesek.setText("Skupni znesek:");
 
         jLabelDnevnaNajemnina.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabelDnevnaNajemnina.setText("Cena dnevne najemnine");
 
         jLabelSkupnaNajemnina.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabelSkupnaNajemnina.setText("Cena celotne najemnine");
 
         jLayeredPaneZnesek.setLayer(jLabelDnesvniZnesek, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPaneZnesek.setLayer(jLabelSkupniZnesek, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -465,10 +694,17 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jLayeredPaneZnesekLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelSkupniZnesek)
                     .addComponent(jLabelSkupnaNajemnina))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jButtonPonastavi.setText("Ponastavi");
+        jButtonPonastavi.setText("Ponastavi vnos");
+        jButtonPonastavi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetValues(evt);
+            }
+        });
+
+        jButton1.setText("Shrani vnos");
 
         jLayeredPanePlačilo.setLayer(jLabelMoznostPlacila, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jRadioButtonGotovina, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -480,6 +716,7 @@ public class MainForm extends javax.swing.JFrame {
         jLayeredPanePlačilo.setLayer(jTextFieldCCV, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jLayeredPaneZnesek, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jButtonPonastavi, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPanePlačilo.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPanePlačiloLayout = new javax.swing.GroupLayout(jLayeredPanePlačilo);
         jLayeredPanePlačilo.setLayout(jLayeredPanePlačiloLayout);
@@ -488,33 +725,36 @@ public class MainForm extends javax.swing.JFrame {
             .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLayeredPaneZnesek)
                     .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
-                        .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLayeredPaneZnesek)
+                        .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
-                                .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
-                                        .addComponent(jLabelMoznostPlacila)
-                                        .addGap(28, 28, 28)
-                                        .addComponent(jRadioButtonGotovina)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jRadioButtonKartica)
-                                        .addGap(53, 53, 53))
-                                    .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
-                                        .addComponent(jLabelStKartice)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextFieldStKartice)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabelCCV)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                                .addComponent(jTextFieldCCV, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPanePlačiloLayout.createSequentialGroup()
+                                .addComponent(jLabelMoznostPlacila)
+                                .addGap(28, 28, 28)
+                                .addComponent(jRadioButtonGotovina)
+                                .addGap(18, 18, 18)
+                                .addComponent(jRadioButtonKartica)
+                                .addGap(53, 53, 53))
+                            .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
+                                .addComponent(jLabelStKartice)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldStKartice)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabelCCV)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(jTextFieldCCV, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPanePlačiloLayout.createSequentialGroup()
+                .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jButtonPonastavi, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonIzvediPlacilo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(137, 137, 137))))
+                            .addComponent(jButtonIzvediPlacilo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(139, 139, 139))
         );
         jLayeredPanePlačiloLayout.setVerticalGroup(
             jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,11 +772,13 @@ public class MainForm extends javax.swing.JFrame {
                     .addComponent(jTextFieldCCV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLayeredPaneZnesek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(jButtonIzvediPlacilo, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonPonastavi, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jButtonIzvediPlacilo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonPonastavi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(46, 46, 46))
         );
 
         jLabelStatus.setText("Status:");
@@ -550,9 +792,8 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLayeredPaneOseba)
                     .addComponent(jLayeredPaneAvtomobil))
-                .addGap(18, 18, 18)
-                .addComponent(jLayeredPanePlačilo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLayeredPanePlačilo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addComponent(jLabelStatus)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -564,10 +805,10 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addComponent(jLayeredPaneAvtomobil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLayeredPaneOseba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLayeredPanePlačilo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabelStatus))
         );
 
@@ -586,6 +827,11 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItemIzhod.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemIzhod.setMnemonic('I');
         jMenuItemIzhod.setText("Izhod");
+        jMenuItemIzhod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitApplication(evt);
+            }
+        });
         jMenuDatoteka.add(jMenuItemIzhod);
 
         jMenuBarMain.add(jMenuDatoteka);
@@ -595,6 +841,11 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuItem4.setMnemonic('P');
         jMenuItem4.setText("Ponastavi");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetValues(evt);
+            }
+        });
         jMenuUredi.add(jMenuItem4);
 
         jMenuBarMain.add(jMenuUredi);
@@ -604,6 +855,11 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuItemAvtor.setMnemonic('A');
         jMenuItemAvtor.setText("Avtor");
+        jMenuItemAvtor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showAuthor(evt);
+            }
+        });
         jMenuPomoc.add(jMenuItemAvtor);
 
         jMenuBarMain.add(jMenuPomoc);
@@ -614,7 +870,9 @@ public class MainForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -623,6 +881,112 @@ public class MainForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void smallCarSizeSelected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallCarSizeSelected
+        fillCars();
+        
+        updateCena(this.majhnaCena);           
+    }//GEN-LAST:event_smallCarSizeSelected
+
+    private void mediumCarSizeSelected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediumCarSizeSelected
+        fillCars();
+
+        updateCena(this.srednjaCena);        
+    }//GEN-LAST:event_mediumCarSizeSelected
+
+    private void largeCarSizeSelected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_largeCarSizeSelected
+       fillCars();
+
+       updateCena(this.visokaCena);
+    }//GEN-LAST:event_largeCarSizeSelected
+
+    private void dodatnoZavarovanjeSelected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodatnoZavarovanjeSelected
+        
+        String textDnevnaCena = jLabelDnevnaNajemnina.getText();
+        int dnevnaCena = Integer.parseInt(textDnevnaCena);       
+        dnevnaCena += 2;   
+        jLabelDnevnaNajemnina.setText(Integer.toString(dnevnaCena));
+        
+        String textSkupnaCena = jLabelSkupnaNajemnina.getText();
+        int skupnaCena = Integer.parseInt(textSkupnaCena);
+        skupnaCena += 2;
+        jLabelSkupnaNajemnina.setText(Integer.toString(skupnaCena));
+        
+    }//GEN-LAST:event_dodatnoZavarovanjeSelected
+
+    private void dodatnoZavarovanjeDiselected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodatnoZavarovanjeDiselected
+        
+        String textDnevnaCena = jLabelDnevnaNajemnina.getText();
+        int dnevnaCena = Integer.parseInt(textDnevnaCena);       
+        dnevnaCena -= 2;   
+        jLabelDnevnaNajemnina.setText(Integer.toString(dnevnaCena));
+        
+        String textSkupnaCena = jLabelSkupnaNajemnina.getText();
+        int skupnaCena = Integer.parseInt(textSkupnaCena);
+        skupnaCena -= 2;
+        jLabelSkupnaNajemnina.setText(Integer.toString(skupnaCena));
+        
+    }//GEN-LAST:event_dodatnoZavarovanjeDiselected
+
+    private void dateChanged(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateChanged
+        
+        if (jRadioButtonVelikostMajhen.isSelected()) {
+            updateCena(this.majhnaCena);
+        } else if (jRadioButtonVelikostSrednji.isSelected()) {
+            updateCena(this.srednjaCena);
+        } else if (jRadioButtonVelikostVelik.isSelected()) {
+            updateCena(this.visokaCena);
+        }   
+    }//GEN-LAST:event_dateChanged
+
+    private void exitApplication(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitApplication
+        
+        System.exit(0);       
+    }//GEN-LAST:event_exitApplication
+
+    private void resetValues(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetValues
+        
+        jTextFieldCCV.setText("");
+        jTextFieldEposta.setText("");
+        jTextFieldIme.setText("");
+        jTextFieldKraj.setText("");
+        jTextFieldPostnaSt.setText("");
+        jTextFieldPriimek.setText("");
+        jTextFieldStKartice.setText("");
+        jTextFieldTelefon.setText("");
+        jTextFieldUlica.setText("");
+        
+        jComboBoxIzposojaDan.setSelectedIndex(0);
+        jComboBoxIzposojaMesec.setSelectedIndex(0);
+        jComboBoxIzposojaUra.setSelectedIndex(0);
+        jComboBoxOddajaDan.setSelectedIndex(0);
+        jComboBoxOddajaMesec.setSelectedIndex(0);
+        jComboBoxOddajaUra.setSelectedIndex(0);
+        
+        jSpinnerStarost.setValue(21);
+        jSpinnerIzkusnje.setValue(0);
+    }//GEN-LAST:event_resetValues
+
+    private void izvediPlacilo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_izvediPlacilo
+        
+        if (jTextFieldStKartice.getText().length() == 16 && jTextFieldCCV.getText().length() == 3 ) {
+            JOptionPane.showMessageDialog(this, "Plačilo uspešno.", "Plačilo", JOptionPane.INFORMATION_MESSAGE);
+        } else if (jTextFieldStKartice.getText().length() == 16 && jTextFieldCCV.getText().length() != 3) {
+            JOptionPane.showMessageDialog(this, "Napačen vnos CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+        } else if (jTextFieldStKartice.getText().length() != 16 && jTextFieldCCV.getText().length() == 3) {
+            JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice in CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+        }
+            
+        
+    }//GEN-LAST:event_izvediPlacilo
+
+    private void showAuthor(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAuthor
+        
+        JOptionPane.showMessageDialog(this, "Tilen Berlak\n63160064\nMaj 2020", "O Avtorju", JOptionPane.INFORMATION_MESSAGE);
+        
+    }//GEN-LAST:event_showAuthor
 
     /**
      * @param args the command line arguments
@@ -660,16 +1024,22 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroupDodatnoZavarovanje;
+    private javax.swing.ButtonGroup buttonGroupIzbiraMenjalnika;
+    private javax.swing.ButtonGroup buttonGroupMoznostPlacila;
+    private javax.swing.ButtonGroup buttonGroupVelikostAvtomobila;
+    private javax.swing.ButtonGroup buttonGroupVrstaMotorja;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonIzvediPlacilo;
     private javax.swing.JButton jButtonPonastavi;
-    private javax.swing.JComboBox<String> jComboBox4;
-    private javax.swing.JComboBox<String> jComboBox5;
-    private javax.swing.JComboBox<String> jComboBox6;
-    private javax.swing.JComboBox<String> jComboBox7;
-    private javax.swing.JComboBox<String> jComboBox8;
-    private javax.swing.JComboBox<String> jComboBox9;
     private javax.swing.JComboBox<String> jComboBoxIzbiraAvtomobila;
+    private javax.swing.JComboBox<String> jComboBoxIzposojaDan;
+    private javax.swing.JComboBox<String> jComboBoxIzposojaMesec;
+    private javax.swing.JComboBox<String> jComboBoxIzposojaUra;
     private javax.swing.JComboBox<String> jComboBoxMestoOddaje;
+    private javax.swing.JComboBox<String> jComboBoxOddajaDan;
+    private javax.swing.JComboBox<String> jComboBoxOddajaMesec;
+    private javax.swing.JComboBox<String> jComboBoxOddajaUra;
     private javax.swing.JComboBox<String> jComboBoxPrevzemnoMesto;
     private javax.swing.JLabel jLabelCCV;
     private javax.swing.JLabel jLabelDatumIzposoje;
@@ -715,8 +1085,8 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButtonDodatnoNe;
     private javax.swing.JRadioButton jRadioButtonGotovina;
     private javax.swing.JRadioButton jRadioButtonKartica;
-    private javax.swing.JRadioButton jRadioButtonMenjalnikAvtomatski;
     private javax.swing.JRadioButton jRadioButtonMenjalnikRočni;
+    private javax.swing.JRadioButton jRadioButtonMenjalnikSamodejni;
     private javax.swing.JRadioButton jRadioButtonMotorBencinski;
     private javax.swing.JRadioButton jRadioButtonMotorDizelski;
     private javax.swing.JRadioButton jRadioButtonVelikostMajhen;
@@ -724,14 +1094,14 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButtonVelikostVelik;
     private javax.swing.JSpinner jSpinnerIzkusnje;
     private javax.swing.JSpinner jSpinnerStarost;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField9;
     private javax.swing.JTextField jTextFieldCCV;
+    private javax.swing.JTextField jTextFieldEposta;
+    private javax.swing.JTextField jTextFieldIme;
+    private javax.swing.JTextField jTextFieldKraj;
+    private javax.swing.JTextField jTextFieldPostnaSt;
+    private javax.swing.JTextField jTextFieldPriimek;
     private javax.swing.JTextField jTextFieldStKartice;
+    private javax.swing.JTextField jTextFieldTelefon;
+    private javax.swing.JTextField jTextFieldUlica;
     // End of variables declaration//GEN-END:variables
 }
