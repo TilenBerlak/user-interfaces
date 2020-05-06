@@ -5,6 +5,9 @@
  */
 package naloga4;
 
+import java.io.File;
+import java.io.FileWriter;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,6 +20,8 @@ public class MainForm extends javax.swing.JFrame {
     private int majhnaCena = 70;
     private int srednjaCena = 100;
     private int visokaCena = 140;
+    private boolean dodatnoZavarovanje = true;
+    
     
     /**
      * Creates new form MainForm
@@ -103,6 +108,41 @@ public class MainForm extends javax.swing.JFrame {
         }      
     }
     
+    private int calculateNumberOfDays() {
+        
+        int danIzposoje = jComboBoxIzposojaDan.getSelectedIndex();
+        int danOddaje = jComboBoxOddajaDan.getSelectedIndex();
+        
+        int mesecIzposoje = jComboBoxIzposojaMesec.getSelectedIndex();
+        int mesecOddaje = jComboBoxOddajaMesec.getSelectedIndex();
+        
+        int steviloDni = (danOddaje - danIzposoje) + 1;
+        int steviloDniOriginal = steviloDni;
+        int steviloMesecev = mesecOddaje - mesecIzposoje;
+        
+        if (steviloDni < 0) {
+            steviloDni = Math.abs(steviloDni);
+        } else if (steviloDni == 0) {
+            steviloDni = 1;
+        }
+        
+        int vsiDnevi;
+        if (steviloMesecev > 0) {
+            
+            vsiDnevi = (30 * steviloMesecev) + steviloDni; 
+            
+        } else if (steviloMesecev < 0 || (steviloMesecev == 0 && steviloDniOriginal < 0)) {
+            steviloMesecev = Math.abs(steviloMesecev);
+            
+            vsiDnevi = 30 * (12 - steviloMesecev) + steviloDni;
+            
+        } else {
+            vsiDnevi = steviloDni;
+        }
+        
+        return vsiDnevi;
+    }
+    
     private int calculateDnevnaCena(int cena) {
         
         int dnevnaCena = cena;
@@ -115,30 +155,7 @@ public class MainForm extends javax.swing.JFrame {
     
     private int calculateSkupnaCena(int cena) {
         
-        int danIzposoje = jComboBoxIzposojaDan.getSelectedIndex();
-        int danOddaje = jComboBoxOddajaDan.getSelectedIndex();
-        
-        int mesecIzposoje = jComboBoxIzposojaMesec.getSelectedIndex();
-        int mesecOddaje = jComboBoxOddajaMesec.getSelectedIndex();
-        
-        int steviloDni = danOddaje - danIzposoje;
-        int steviloMesecev = mesecOddaje - mesecIzposoje;
-        
-        if (steviloDni < 0) {
-            steviloDni = Math.abs(steviloDni);
-        }
-        
-        int vsiDnevi;
-        if (steviloMesecev < 0) {
-            steviloMesecev = Math.abs(steviloMesecev);
-            
-            int n = steviloMesecev - 1;
-            vsiDnevi = (30 * n) + steviloDni; 
-            
-        }  else {
-            vsiDnevi = steviloDni;
-        }
-        
+        int vsiDnevi = calculateNumberOfDays();
         int skupnaCena = vsiDnevi * cena;
         return skupnaCena;
     }
@@ -165,6 +182,7 @@ public class MainForm extends javax.swing.JFrame {
         buttonGroupVrstaMotorja = new javax.swing.ButtonGroup();
         buttonGroupDodatnoZavarovanje = new javax.swing.ButtonGroup();
         buttonGroupMoznostPlacila = new javax.swing.ButtonGroup();
+        jFileChooser = new javax.swing.JFileChooser();
         jPanelMain = new javax.swing.JPanel();
         jLayeredPaneAvtomobil = new javax.swing.JLayeredPane();
         jLabelDatumIzposoje = new javax.swing.JLabel();
@@ -219,7 +237,6 @@ public class MainForm extends javax.swing.JFrame {
         jRadioButtonKartica = new javax.swing.JRadioButton();
         jButtonIzvediPlacilo = new javax.swing.JButton();
         jLabelStKartice = new javax.swing.JLabel();
-        jTextFieldStKartice = new javax.swing.JTextField();
         jLabelCCV = new javax.swing.JLabel();
         jTextFieldCCV = new javax.swing.JTextField();
         jLayeredPaneZnesek = new javax.swing.JLayeredPane();
@@ -228,7 +245,8 @@ public class MainForm extends javax.swing.JFrame {
         jLabelDnevnaNajemnina = new javax.swing.JLabel();
         jLabelSkupnaNajemnina = new javax.swing.JLabel();
         jButtonPonastavi = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jButtonShrani = new javax.swing.JButton();
+        jPasswordFieldStKartice = new javax.swing.JPasswordField();
         jLabelStatus = new javax.swing.JLabel();
         jMenuBarMain = new javax.swing.JMenuBar();
         jMenuDatoteka = new javax.swing.JMenu();
@@ -241,6 +259,7 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItemAvtor = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Izposojevalnica avtomobilov Avtek");
 
         jPanelMain.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
 
@@ -518,6 +537,12 @@ public class MainForm extends javax.swing.JFrame {
 
         jLabelPostnaSt.setText("Poštna št.:");
 
+        jTextFieldPostnaSt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                preveriPostnaSt(evt);
+            }
+        });
+
         jLabelEposta.setText("E-pošta:");
 
         jTextFieldEposta.setToolTipText("");
@@ -697,26 +722,33 @@ public class MainForm extends javax.swing.JFrame {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jButtonPonastavi.setText("Ponastavi vnos");
+        jButtonPonastavi.setText("Izbriši vnos");
         jButtonPonastavi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resetValues(evt);
             }
         });
 
-        jButton1.setText("Shrani vnos");
+        jButtonShrani.setText("Shrani vnos");
+        jButtonShrani.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shraniVnos(evt);
+            }
+        });
+
+        jPasswordFieldStKartice.setEchoChar('x');
 
         jLayeredPanePlačilo.setLayer(jLabelMoznostPlacila, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jRadioButtonGotovina, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jRadioButtonKartica, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jButtonIzvediPlacilo, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jLabelStKartice, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPanePlačilo.setLayer(jTextFieldStKartice, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jLabelCCV, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jTextFieldCCV, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jLayeredPaneZnesek, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPanePlačilo.setLayer(jButtonPonastavi, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPanePlačilo.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPanePlačilo.setLayer(jButtonShrani, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPanePlačilo.setLayer(jPasswordFieldStKartice, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPanePlačiloLayout = new javax.swing.GroupLayout(jLayeredPanePlačilo);
         jLayeredPanePlačilo.setLayout(jLayeredPanePlačiloLayout);
@@ -737,8 +769,8 @@ public class MainForm extends javax.swing.JFrame {
                                 .addGap(53, 53, 53))
                             .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
                                 .addComponent(jLabelStKartice)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldStKartice)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPasswordFieldStKartice)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabelCCV)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
@@ -748,7 +780,7 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonShrani, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jLayeredPanePlačiloLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -767,18 +799,18 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jLayeredPanePlačiloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelStKartice)
-                    .addComponent(jTextFieldStKartice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelCCV)
-                    .addComponent(jTextFieldCCV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldCCV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPasswordFieldStKartice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLayeredPaneZnesek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonIzvediPlacilo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonShrani, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonPonastavi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(46, 46, 46))
+                .addGap(40, 40, 40))
         );
 
         jLabelStatus.setText("Status:");
@@ -802,26 +834,37 @@ public class MainForm extends javax.swing.JFrame {
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addComponent(jLayeredPaneAvtomobil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLayeredPaneOseba, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLayeredPanePlačilo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLayeredPanePlačilo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabelStatus))
         );
 
         jMenuDatoteka.setMnemonic('D');
         jMenuDatoteka.setText("Datoteka");
 
+        jMenuItemOdpri.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemOdpri.setMnemonic('O');
         jMenuItemOdpri.setText("Odpri");
+        jMenuItemOdpri.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                odpriVnos(evt);
+            }
+        });
         jMenuDatoteka.add(jMenuItemOdpri);
 
         jMenuItemShrani.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemShrani.setMnemonic('S');
         jMenuItemShrani.setText("Shrani");
+        jMenuItemShrani.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shraniVnos(evt);
+            }
+        });
         jMenuDatoteka.add(jMenuItemShrani);
 
         jMenuItemIzhod.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
@@ -901,30 +944,43 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_largeCarSizeSelected
 
     private void dodatnoZavarovanjeSelected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodatnoZavarovanjeSelected
-        
-        String textDnevnaCena = jLabelDnevnaNajemnina.getText();
-        int dnevnaCena = Integer.parseInt(textDnevnaCena);       
-        dnevnaCena += 2;   
-        jLabelDnevnaNajemnina.setText(Integer.toString(dnevnaCena));
-        
-        String textSkupnaCena = jLabelSkupnaNajemnina.getText();
-        int skupnaCena = Integer.parseInt(textSkupnaCena);
-        skupnaCena += 2;
-        jLabelSkupnaNajemnina.setText(Integer.toString(skupnaCena));
+                     
+        if (!this.dodatnoZavarovanje) {
+            
+            this.dodatnoZavarovanje = true;
+            
+            String textDnevnaCena = jLabelDnevnaNajemnina.getText();
+            int dnevnaCena = Integer.parseInt(textDnevnaCena);       
+            dnevnaCena += 2;   
+            jLabelDnevnaNajemnina.setText(Integer.toString(dnevnaCena));
+
+            String textSkupnaCena = jLabelSkupnaNajemnina.getText();
+            int skupnaCena = Integer.parseInt(textSkupnaCena);
+            int vsiDnevi = calculateNumberOfDays();
+            skupnaCena += 2 * vsiDnevi;
+            jLabelSkupnaNajemnina.setText(Integer.toString(skupnaCena));
+            
+        }
         
     }//GEN-LAST:event_dodatnoZavarovanjeSelected
 
     private void dodatnoZavarovanjeDiselected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dodatnoZavarovanjeDiselected
-        
-        String textDnevnaCena = jLabelDnevnaNajemnina.getText();
-        int dnevnaCena = Integer.parseInt(textDnevnaCena);       
-        dnevnaCena -= 2;   
-        jLabelDnevnaNajemnina.setText(Integer.toString(dnevnaCena));
-        
-        String textSkupnaCena = jLabelSkupnaNajemnina.getText();
-        int skupnaCena = Integer.parseInt(textSkupnaCena);
-        skupnaCena -= 2;
-        jLabelSkupnaNajemnina.setText(Integer.toString(skupnaCena));
+             
+        if (this.dodatnoZavarovanje) {
+            
+            this.dodatnoZavarovanje = false;
+            
+            String textDnevnaCena = jLabelDnevnaNajemnina.getText();
+            int dnevnaCena = Integer.parseInt(textDnevnaCena);       
+            dnevnaCena -= 2;   
+            jLabelDnevnaNajemnina.setText(Integer.toString(dnevnaCena));
+
+            String textSkupnaCena = jLabelSkupnaNajemnina.getText();
+            int skupnaCena = Integer.parseInt(textSkupnaCena);
+            int vsiDnevi = calculateNumberOfDays();
+            skupnaCena -= 2 * vsiDnevi;
+            jLabelSkupnaNajemnina.setText(Integer.toString(skupnaCena));
+        }
         
     }//GEN-LAST:event_dodatnoZavarovanjeDiselected
 
@@ -946,40 +1002,50 @@ public class MainForm extends javax.swing.JFrame {
 
     private void resetValues(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetValues
         
-        jTextFieldCCV.setText("");
-        jTextFieldEposta.setText("");
-        jTextFieldIme.setText("");
-        jTextFieldKraj.setText("");
-        jTextFieldPostnaSt.setText("");
-        jTextFieldPriimek.setText("");
-        jTextFieldStKartice.setText("");
-        jTextFieldTelefon.setText("");
-        jTextFieldUlica.setText("");
-        
-        jComboBoxIzposojaDan.setSelectedIndex(0);
-        jComboBoxIzposojaMesec.setSelectedIndex(0);
-        jComboBoxIzposojaUra.setSelectedIndex(0);
-        jComboBoxOddajaDan.setSelectedIndex(0);
-        jComboBoxOddajaMesec.setSelectedIndex(0);
-        jComboBoxOddajaUra.setSelectedIndex(0);
-        
-        jSpinnerStarost.setValue(21);
-        jSpinnerIzkusnje.setValue(0);
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Ali ste prepričani, da želite izbrisati vnos?", "Izbris vnosa", JOptionPane.YES_NO_OPTION);
+        if(dialogResult == JOptionPane.YES_OPTION) {
+            jTextFieldCCV.setText("");
+            jTextFieldEposta.setText("");
+            jTextFieldIme.setText("");
+            jTextFieldKraj.setText("");
+            jTextFieldPostnaSt.setText("");
+            jTextFieldPriimek.setText("");
+            jTextFieldStKartice.setText("");
+            jTextFieldTelefon.setText("");
+            jTextFieldUlica.setText("");
+
+            jComboBoxIzposojaDan.setSelectedIndex(0);
+            jComboBoxIzposojaMesec.setSelectedIndex(0);
+            jComboBoxIzposojaUra.setSelectedIndex(0);
+            jComboBoxOddajaDan.setSelectedIndex(0);
+            jComboBoxOddajaMesec.setSelectedIndex(0);
+            jComboBoxOddajaUra.setSelectedIndex(0);
+
+            jSpinnerStarost.setValue(21);
+            jSpinnerIzkusnje.setValue(0);
+
+            jLabelStatus.setText("Status: Vnos pobrisan");
+        }
+            
+
     }//GEN-LAST:event_resetValues
 
     private void izvediPlacilo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_izvediPlacilo
-        
-        if (jTextFieldStKartice.getText().length() == 16 && jTextFieldCCV.getText().length() == 3 ) {
+ 
+        if (jPasswordFieldStKartice.getPassword().length == 16 && jTextFieldCCV.getText().length() == 3 ) {
             JOptionPane.showMessageDialog(this, "Plačilo uspešno.", "Plačilo", JOptionPane.INFORMATION_MESSAGE);
-        } else if (jTextFieldStKartice.getText().length() == 16 && jTextFieldCCV.getText().length() != 3) {
+            jLabelStatus.setText("Status: Plačilo uspešno.");
+        } else if (jPasswordFieldStKartice.getPassword().length == 16 && jTextFieldCCV.getText().length() != 3) {
             JOptionPane.showMessageDialog(this, "Napačen vnos CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
-        } else if (jTextFieldStKartice.getText().length() != 16 && jTextFieldCCV.getText().length() == 3) {
+            jLabelStatus.setText("Status: Napaka pri plačilu.");
+        } else if (jPasswordFieldStKartice.getPassword().length != 16 && jTextFieldCCV.getText().length() == 3) {
             JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+            jLabelStatus.setText("Status: Napaka pri plačilu.");
         } else {
             JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice in CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+            jLabelStatus.setText("Status: Napaka pri plačilu.");
         }
-            
-        
+                    
     }//GEN-LAST:event_izvediPlacilo
 
     private void showAuthor(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAuthor
@@ -987,6 +1053,33 @@ public class MainForm extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Tilen Berlak\n63160064\nMaj 2020", "O Avtorju", JOptionPane.INFORMATION_MESSAGE);
         
     }//GEN-LAST:event_showAuthor
+
+    private void shraniVnos(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shraniVnos
+        
+        if(jFileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            JOptionPane.showMessageDialog(this, "Vnos shranjen.", "Shrani vnos", JOptionPane.INFORMATION_MESSAGE);
+            jLabelStatus.setText("Status: Vnos shranjen");
+        }
+        
+    }//GEN-LAST:event_shraniVnos
+
+    private void odpriVnos(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_odpriVnos
+        
+        if(jFileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {       
+            jLabelStatus.setText("Status: Vnos odprt");
+        }
+        
+    }//GEN-LAST:event_odpriVnos
+
+    private void preveriPostnaSt(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_preveriPostnaSt
+        
+        String text = jTextFieldPostnaSt.getText();
+        
+        if(!text.matches("[0-9]+") && text.length() != 4) {
+             JOptionPane.showMessageDialog(this, "Poštna številka " + text + " je neveljavna.", "Opozorilo", JOptionPane.WARNING_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_preveriPostnaSt
 
     /**
      * @param args the command line arguments
@@ -1029,9 +1122,9 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroupMoznostPlacila;
     private javax.swing.ButtonGroup buttonGroupVelikostAvtomobila;
     private javax.swing.ButtonGroup buttonGroupVrstaMotorja;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonIzvediPlacilo;
     private javax.swing.JButton jButtonPonastavi;
+    private javax.swing.JButton jButtonShrani;
     private javax.swing.JComboBox<String> jComboBoxIzbiraAvtomobila;
     private javax.swing.JComboBox<String> jComboBoxIzposojaDan;
     private javax.swing.JComboBox<String> jComboBoxIzposojaMesec;
@@ -1041,6 +1134,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> jComboBoxOddajaMesec;
     private javax.swing.JComboBox<String> jComboBoxOddajaUra;
     private javax.swing.JComboBox<String> jComboBoxPrevzemnoMesto;
+    private javax.swing.JFileChooser jFileChooser;
     private javax.swing.JLabel jLabelCCV;
     private javax.swing.JLabel jLabelDatumIzposoje;
     private javax.swing.JLabel jLabelDatumOddaje;
@@ -1081,6 +1175,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuPomoc;
     private javax.swing.JMenu jMenuUredi;
     private javax.swing.JPanel jPanelMain;
+    private javax.swing.JPasswordField jPasswordFieldStKartice;
     private javax.swing.JRadioButton jRadioButtonDodatnoDa;
     private javax.swing.JRadioButton jRadioButtonDodatnoNe;
     private javax.swing.JRadioButton jRadioButtonGotovina;
@@ -1100,7 +1195,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldKraj;
     private javax.swing.JTextField jTextFieldPostnaSt;
     private javax.swing.JTextField jTextFieldPriimek;
-    private javax.swing.JTextField jTextFieldStKartice;
     private javax.swing.JTextField jTextFieldTelefon;
     private javax.swing.JTextField jTextFieldUlica;
     // End of variables declaration//GEN-END:variables

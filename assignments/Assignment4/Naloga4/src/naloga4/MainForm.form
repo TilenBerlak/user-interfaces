@@ -12,6 +12,8 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="buttonGroupMoznostPlacila">
     </Component>
+    <Component class="javax.swing.JFileChooser" name="jFileChooser">
+    </Component>
     <Menu class="javax.swing.JMenuBar" name="jMenuBarMain">
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenuDatoteka">
@@ -22,9 +24,15 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemOdpri">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+O"/>
+                </Property>
                 <Property name="mnemonic" type="int" value="79"/>
                 <Property name="text" type="java.lang.String" value="Odpri"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="odpriVnos"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemShrani">
               <Properties>
@@ -34,6 +42,9 @@
                 <Property name="mnemonic" type="int" value="83"/>
                 <Property name="text" type="java.lang.String" value="Shrani"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shraniVnos"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemIzhod">
               <Properties>
@@ -88,6 +99,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Izposojevalnica avtomobilov Avtek"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="jMenuBarMain"/>
@@ -151,15 +163,15 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Component id="jLayeredPaneAvtomobil" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jLayeredPaneOseba" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jLayeredPanePlačilo" max="32767" attributes="0"/>
+                      <Component id="jLayeredPanePlačilo" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
                   <Component id="jLabelStatus" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -772,6 +784,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextFieldPostnaSt">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="preveriPostnaSt"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelEposta">
               <Properties>
@@ -828,8 +843,8 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="jLabelStKartice" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jTextFieldStKartice" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jPasswordFieldStKartice" max="32767" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jLabelCCV" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -844,7 +859,7 @@
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="jButton1" min="-2" pref="150" max="-2" attributes="0"/>
+                              <Component id="jButtonShrani" min="-2" pref="150" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -870,19 +885,19 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabelStKartice" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextFieldStKartice" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabelCCV" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextFieldCCV" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jPasswordFieldStKartice" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLayeredPaneZnesek" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jButtonIzvediPlacilo" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jButton1" max="32767" attributes="0"/>
+                      <Component id="jButtonShrani" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jButtonPonastavi" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -928,8 +943,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="&#x160;t. kreditne kartice:"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextFieldStKartice">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelCCV">
               <Properties>
@@ -1012,15 +1025,25 @@
             </Container>
             <Component class="javax.swing.JButton" name="jButtonPonastavi">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Ponastavi vnos"/>
+                <Property name="text" type="java.lang.String" value="Izbri&#x161;i vnos"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetValues"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="jButtonShrani">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Shrani vnos"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shraniVnos"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JPasswordField" name="jPasswordFieldStKartice">
+              <Properties>
+                <Property name="echoChar" type="char" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="&apos;x&apos;" type="code"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>
