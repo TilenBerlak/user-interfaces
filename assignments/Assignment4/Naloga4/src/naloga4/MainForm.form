@@ -918,6 +918,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Gotovina"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gotovinaSelected"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JRadioButton" name="jRadioButtonKartica">
               <Properties>
@@ -930,6 +933,9 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Kartica"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="karticaSelected"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jButtonIzvediPlacilo">
               <Properties>

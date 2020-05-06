@@ -661,11 +661,21 @@ public class MainForm extends javax.swing.JFrame {
         buttonGroupMoznostPlacila.add(jRadioButtonGotovina);
         jRadioButtonGotovina.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonGotovina.setText("Gotovina");
+        jRadioButtonGotovina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gotovinaSelected(evt);
+            }
+        });
 
         buttonGroupMoznostPlacila.add(jRadioButtonKartica);
         jRadioButtonKartica.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonKartica.setSelected(true);
         jRadioButtonKartica.setText("Kartica");
+        jRadioButtonKartica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                karticaSelected(evt);
+            }
+        });
 
         jButtonIzvediPlacilo.setText("Izvedi plačilo");
         jButtonIzvediPlacilo.addActionListener(new java.awt.event.ActionListener() {
@@ -1010,7 +1020,7 @@ public class MainForm extends javax.swing.JFrame {
             jTextFieldKraj.setText("");
             jTextFieldPostnaSt.setText("");
             jTextFieldPriimek.setText("");
-            jTextFieldStKartice.setText("");
+            jPasswordFieldStKartice.setText("");
             jTextFieldTelefon.setText("");
             jTextFieldUlica.setText("");
 
@@ -1032,20 +1042,41 @@ public class MainForm extends javax.swing.JFrame {
 
     private void izvediPlacilo(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_izvediPlacilo
  
-        if (jPasswordFieldStKartice.getPassword().length == 16 && jTextFieldCCV.getText().length() == 3 ) {
-            JOptionPane.showMessageDialog(this, "Plačilo uspešno.", "Plačilo", JOptionPane.INFORMATION_MESSAGE);
-            jLabelStatus.setText("Status: Plačilo uspešno.");
-        } else if (jPasswordFieldStKartice.getPassword().length == 16 && jTextFieldCCV.getText().length() != 3) {
-            JOptionPane.showMessageDialog(this, "Napačen vnos CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
-            jLabelStatus.setText("Status: Napaka pri plačilu.");
-        } else if (jPasswordFieldStKartice.getPassword().length != 16 && jTextFieldCCV.getText().length() == 3) {
-            JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice.", "Plačilo", JOptionPane.WARNING_MESSAGE);
-            jLabelStatus.setText("Status: Napaka pri plačilu.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice in CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
-            jLabelStatus.setText("Status: Napaka pri plačilu.");
+        boolean preveriVnos = true;
+        
+        if (jTextFieldIme.getText().isEmpty() || jTextFieldPriimek.getText().isEmpty() || jTextFieldKraj.getText().isEmpty() 
+                || jTextFieldPostnaSt.getText().isEmpty() || jTextFieldTelefon.getText().isEmpty() || jTextFieldUlica.getText().isEmpty()
+                || jTextFieldEposta.getText().isEmpty()) {
+            
+            preveriVnos = false;            
         }
-                    
+        
+        if(preveriVnos) {
+            if (jRadioButtonKartica.isSelected()) {                  
+                if (jPasswordFieldStKartice.getPassword().length == 16 && jTextFieldCCV.getText().length() == 3 ) {
+                    JOptionPane.showMessageDialog(this, "Plačilo uspešno.", "Plačilo", JOptionPane.INFORMATION_MESSAGE);
+                    jLabelStatus.setText("Status: Plačilo uspešno.");
+                } else if (jPasswordFieldStKartice.getPassword().length == 16 && jTextFieldCCV.getText().length() != 3) {
+                    JOptionPane.showMessageDialog(this, "Napačen vnos CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+                    jLabelStatus.setText("Status: Napaka pri plačilu.");
+                } else if (jPasswordFieldStKartice.getPassword().length != 16 && jTextFieldCCV.getText().length() == 3) {
+                    JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+                    jLabelStatus.setText("Status: Napaka pri plačilu.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Napačen vnos številke kreditne kartice in CCV.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+                    jLabelStatus.setText("Status: Napaka pri plačilu.");
+                }            
+            } else {            
+                JOptionPane.showMessageDialog(this, "Plačilo uspešno.", "Plačilo", JOptionPane.INFORMATION_MESSAGE);
+                jLabelStatus.setText("Status: Plačilo uspešno.");           
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Napaka, mankajo podatki o osebi.", "Plačilo", JOptionPane.WARNING_MESSAGE);
+            jLabelStatus.setText("Status: Napaka pri vnosu podatkov o osebi"); 
+        }
+        
+
+        
     }//GEN-LAST:event_izvediPlacilo
 
     private void showAuthor(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showAuthor
@@ -1080,6 +1111,24 @@ public class MainForm extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_preveriPostnaSt
+
+    private void karticaSelected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_karticaSelected
+        
+        jLabelStKartice.setEnabled(true);
+        jLabelCCV.setEnabled(true);
+        jPasswordFieldStKartice.setEnabled(true);
+        jTextFieldCCV.setEnabled(true);
+        
+    }//GEN-LAST:event_karticaSelected
+
+    private void gotovinaSelected(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gotovinaSelected
+        
+        jLabelStKartice.setEnabled(false);
+        jLabelCCV.setEnabled(false);
+        jPasswordFieldStKartice.setEnabled(false);
+        jTextFieldCCV.setEnabled(false);
+        
+    }//GEN-LAST:event_gotovinaSelected
 
     /**
      * @param args the command line arguments

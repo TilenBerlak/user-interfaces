@@ -1,0 +1,84 @@
+Pri izdelavi aplikacije za najem avtomobilov sem se lotil na sledeči način.
+
+V glavnem oknu sem ustvaril tri sklope:
+- Podatki o avtomobilu (prvi del pogovora),
+- Podatki o osebi (drugi del pogovora),
+- Ter plačilni sklop (tretji del pogovora).
+
+To pripomore k lepši preglednosti uporabniškega vmesnika.
+
+Izbor widgetov:
+- Za izbor datuma sem uporabil 3 jComboBoxe in jih napolnil z uporabo for zanke. Zgleda pregledno in praktično.
+- Prevzemna mesta in mesta oddaj avtomobila so prav tako shranjena v izpustnem seznamu, saj se mi je zdel najbolj praktičen.
+- Velikost avtomobila je mogoče izbrati z jRadioButtnom, ki posledično vpliva, kateri avtomobili bodo prikazani v izpustnem seznamu "Izbira Avtomobila".
+- Pri vseh vnosih, kjer je malo izbire sem uporabil jRadioButton.
+- Za podatke o osebi sem uporabil jTextField.
+- Pri starosti pa pri izbiri vozniških izkušenj pa jSpinnerBox, ker se mi zdi bolj primeren za vnos numeričnih vrednosti.
+- Dodatno zavarovanje jRadioButtona vplivata na dnevno in skupno ceno.
+- Za vnos kreditne kartice sem uporabil jPasswordField in sremenil echoCharacter z x.
+- Pod plačilnim sklopom sem na smiselno mesto podal še 3 gumbe za uporavljanje vnosa.
+
+Aranžiranje:
+Pri vseh postavitvah widgetov sem bil konsistenten in se držal Nielsenovih principov.
+Velikosti tekstovnih polj pri osebi so enaka, enake razdaljne med njimi itd.
+Vnosi so smiselno grupirani (Podatki o avtomobilu skupaj, podatki o osebi skupaj npr. ime in priimek si sledita, podatki o plačilu skupaj).
+
+Izbor teksta:
+Izbral sem preprost tekst. 
+Nekje sem uporabil odebeljeno pisavo zaradi lepše preglednosti.
+
+Barve in slike:
+Slik nisem uporabil, ker se mi zdi da jih takšna aplikacija ne potrebuje.
+Če bi imel na voljo logotip od firme bi ga dodal na primerno mesto.
+Uporabil sem preproste sive barve, saj mislim, da je tako vmesnik najbolj prijazen očem.
+
+Jezik:
+- Uporabil sem preprost in jedernat jezik.
+- Okenska sporočila natančno opišejo napako oz. status
+
+Delovanje aplikacije:
+
+Statusna vrstica izpiše naslednje:
+- o napaki pri napačnem vnosu št. kreditne kartice, CCV in podatkov o osebi
+- status o uspešnem plačilu
+- status pri shranjevanu
+- status pri odpiranju vnosa
+- status pri brisanju vnosa
+
+Pri izbiri velikosti avtomobila se zgodi naslednje:
+- jComboBox ima drugi seznam avtomobilov
+- Dnevna in skupna cena se spremenita glede na velikost avtomobila
+
+Pri spremembi datuma se zgodi naslednje:
+- Posodablja se dnevna in skupna cena
+
+Ob pritisku na gumb izvedi plačilo se zgodi naslednje:
+- Ob napačnem vnosu št. kartice ( != 16 znakov) se prikaže okno o napaki,
+- prav tako se prikaže okno o napki če ccv != 3 znakov.
+- javi napako, če podatki o osebi niso vnešeni.
+- V primeru, da so vsa polja pravilno izpolnjena se odpro okno s uspešnim plačilom.
+
+Ob pritisku na gumb shrani:
+- Odpre se jFileChooser
+- Aplikacija ne shrani ničesar.
+
+Ob pritisku na gumb Izbriši vnos:
+- Odpre se dialog, ki vpraša uporabnika o če je prepričan o izbrisu vnosa.
+- V primeru, da uporabnik odgovori z da se vsa polja ponastavijo.
+
+V menu vrstici pod Datoteka:
+- Odpri bo prikazal jFileChooser, ampak ne odpre ničesar.
+- Shrani bo prikazal JFileChooser, prav tako ne bo naredil nič.
+- Izhod bo zaprl aplikacijo.
+
+
+
+
+
+
+
+
+
+
+
+
