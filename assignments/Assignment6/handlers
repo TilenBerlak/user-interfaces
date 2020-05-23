@@ -1,0 +1,24 @@
+handlers:
+
+- odpriCB
+- pobrisiCB
+- izhodCB
+
+- izbire1tCB
+- izbire1iCB
+- izbire1lCB
+- izbire1eCB
+- izbire1nCB
+
+- izbire2bCB
+- izbire2eCB
+- izbire2rCB
+- izbire2lCB
+- izbire2aCB
+- izbire2kCB
+
+- izvediCB
+
+
+
+
