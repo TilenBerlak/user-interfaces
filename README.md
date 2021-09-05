@@ -1,5 +1,5 @@
 # User interfaces
-Java Swing applications for a university course.  
+A collection of user interfaces from a university course.
 
 ![Alt text](UV1.png) 
    
